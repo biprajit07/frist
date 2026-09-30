@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Turtle Graphics - Spiral</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .container {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+      color: #38bdf8;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+    .canvas-container {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #334155;
+      background: #000;
+    }
+    canvas {
+      display: block;
+    }
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      width: 100%;
+      justify-content: center;
+    }
+    button {
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    button:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .code-box {
+      margin-top: 24px;
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .code-header {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    pre {
+      font-family: "Fira Code", monospace, Consolas, sans-serif;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Python Turtle Graphics</h1>
+    <div class="subtitle">Live browser simulation of <code>frist.py</code></div>
+
+    <div class="canvas-container">
+      <canvas id="turtleCanvas" width="480" height="480"></canvas>
+    </div>
+
+    <div class="controls">
+      <button onclick="startDrawing()">Replay Animation</button>
+    </div>
+
+    <div class="code-box">
+      <div class="code-header">Source Code (frist.py)</div>
+      <pre>import turtle
+
+t = turtle.Turtle()
+t.speed(0)
+
+colors = ["red", "blue", "green", "yellow", "purple"]
+
+for i in range(100):
+    t.color(colors[i % 5])
+    t.forward(i * 3)
+    t.right(91)
+
+turtle.done()</pre>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("turtleCanvas");
+    const ctx = canvas.getContext("2d");
+    const colors = ["red", "blue", "green", "yellow", "purple"];
+    let animationId = null;
+
+    function startDrawing() {
+      if (animationId) cancelAnimationFrame(animationId);
+
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      let x = canvas.width / 2;
+      let y = canvas.height / 2;
+      let angle = 0; // East (0 degrees)
+      let i = 0;
+
+      function step() {
+        if (i >= 100) return;
+
+        const color = colors[i % 5];
+        const dist = i * 3;
+
+        // Angle in radians (in standard turtle, right turns clockwise)
+        const rad = (angle * Math.PI) / 180;
+        const nextX = x + dist * Math.cos(rad);
+        const nextY = y + dist * Math.sin(rad);
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(nextX, nextY);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        x = nextX;
+        y = nextY;
+        angle += 91;
+        i++;
+
+        animationId = requestAnimationFrame(step);
+      }
+
+      step();
+    }
+
+    startDrawing();
+  </script>
+</body>
+</html>
